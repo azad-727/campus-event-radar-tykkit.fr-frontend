@@ -1,0 +1,134 @@
+:root {
+  --bg-void: #030407; /* The deep dark bottom */
+  --brand-blue: #3B82F6;
+  --text-muted: rgba(255, 255, 255, 0.6);
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-void);
+  color: #FFFFFF;
+  font-family: 'Inter', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 1. The Massive Spotlight Background */
+.premium-bg {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  /* The exact top-down gradient blend from your images */
+  background-image: 
+    radial-gradient(120% 110% at 50% 0%, #60A5FA 0%, #1D4ED8 35%, var(--bg-void) 80%),
+    radial-gradient(40% 40% at 50% 0%, #FFFFFF 0%, transparent 100%);
+}
+
+/* 2. Responsive Container */
+.auth-container {
+  width: 100%;
+  max-width: 440px; /* Keeps the mobile-proportions on desktop */
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+/* 3. The tk tykkit.fr Logo */
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.brand-logo-icon {
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -2px;
+}
+
+.brand-logo-text {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* 4. Ultra-Premium Typography */
+.hero-heading {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  margin: 0 0 16px 0;
+}
+
+.text-blue {
+  color: var(--brand-blue);
+}
+
+.hero-subheading {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0 0 32px 0;
+  font-weight: 400;
+}
+
+/* 5. Minimal Inputs */
+.premium-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 18px;
+  padding: 12px 0;
+  margin-bottom: 24px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.premium-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.premium-input:focus {
+  border-bottom: 1px solid var(--brand-blue);
+}
+
+/* 6. The Glowing Enter Button */
+.premium-button {
+  width: 100%;
+  background: linear-gradient(180deg, #60A5FA 0%, #2563EB 100%);
+  color: white;
+  border: none;
+  border-radius: 100px; /* Pill shape from image */
+  padding: 18px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.4);
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+
+.premium-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.6);
+}
+
+.premium-button:active {
+  transform: translateY(0);
+}
+
+.skip-text {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 15px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+}

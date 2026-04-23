@@ -1,0 +1,948 @@
+/* ==========================================================
+   Tykkit.fr - Full Page Dashboard (Map Top, Grid, Brutalist Footer)
+========================================================== */
+
+.dashboard-layout {
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #02040A; /* Clean Deep black/blue */
+  color: #FFFFFF;
+  font-family: 'Inter', -apple-system, sans-serif;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* --- THE CYBER GRID BACKGROUND --- */
+.cyber-grid-background {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.site-header, .main-content, .site-footer {
+  position: relative;
+  z-index: 10;
+}
+
+/* --- HEADER --- */
+.site-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 24px;
+  background: rgba(2, 4, 10, 0.8); backdrop-filter: blur(12px);
+  position: sticky; top: 0; z-index: 100;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.logo-badge { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.brand-logo-icon { background: #3B82F6; color: #fff; padding: 6px 10px; border-radius: 8px; font-weight: 800; font-size: 14px; }
+.brand-logo-text { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+
+.header-actions { display: flex; align-items: center; gap: 16px; }
+
+.search-bar {
+  display: flex; gap: 8px; align-items: center;
+  background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 16px; border-radius: 20px;
+}
+.search-bar input { background: transparent; border: none; color: white; outline: none; font-size: 14px; width: 150px; }
+
+.icon-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; }
+.user-profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; color: #60A5FA; cursor: pointer; }
+
+/* --- 3-COLUMN MAIN CONTENT ARCHITECTURE --- */
+.main-content {
+  flex: 1; width: 100%; max-width: 1400px; margin: 0 auto; padding: 24px; box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 32px;
+}
+
+@media (min-width: 1024px) {
+  .main-content { display: grid; grid-template-columns: 280px 1fr 320px; align-items: start; gap: 32px; }
+}
+
+/* --- SIDE PANELS (Left & Right) --- */
+.side-panel {
+  background: rgba(15, 15, 15, 0.8); border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px; padding: 24px; backdrop-filter: blur(8px);
+  position: sticky; top: 100px; 
+}
+
+.panel-title { font-size: 18px; font-weight: 800; margin: 0 0 4px 0; }
+.panel-subtitle { font-size: 13px; color: rgba(255,255,255,0.5); margin: 0 0 24px 0; }
+
+.vibes-list { display: flex; flex-direction: column; gap: 16px; }
+.vibe-item { display: flex; align-items: center; gap: 16px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
+.vibe-item:hover { transform: translateX(4px); border-color: rgba(59, 130, 246, 0.5); }
+.vibe-emoji-box { width: 48px; height: 48px; background: #FFFFFF; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 4px 4px 0px rgba(59, 130, 246, 0.8); }
+.vibe-info { display: flex; flex-direction: column; gap: 4px; }
+.vibe-label { font-size: 14px; font-weight: 800; letter-spacing: 0.5px; }
+.vibe-votes { font-size: 12px; color: #60A5FA; display: flex; align-items: center; gap: 4px; font-weight: 600; }
+
+.billboard-panel { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 32px 24px; background: linear-gradient(180deg, rgba(59, 130, 246, 0.1) 0%, rgba(15, 15, 15, 0.8) 100%); border-color: rgba(59, 130, 246, 0.3); }
+.billboard-tag { background: #3B82F6; color: #FFF; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; letter-spacing: 1px; margin-bottom: 16px; }
+.billboard-title { font-size: 24px; font-weight: 900; line-height: 1.2; margin: 0 0 24px 0; }
+.countdown-grid { display: flex; gap: 12px; margin-bottom: 24px; width: 100%; }
+.time-box { flex: 1; background: #02040A; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px 0; display: flex; flex-direction: column; gap: 4px; }
+.time-num { font-size: 28px; font-weight: 800; color: #FFFFFF; line-height: 1; }
+.time-label { font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 700; letter-spacing: 1px; }
+.billboard-btn { width: 100%; background: rgba(255,255,255,0.1); color: #FFF; border: 1px solid rgba(255,255,255,0.2); padding: 12px; border-radius: 20px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+.billboard-btn:hover { background: rgba(255,255,255,0.2); }
+
+/* --- MAP SECTION --- */
+.map-section { margin-bottom: 40px; } 
+.map-glass-border { border-radius: 24px; padding: 8px; background: #ca05050d; border: 1px solid #3B82F6 ; }
+.leaflet-map-container { width: 100%; height: 350px; border-radius: 16px; background: #3B82F6 ; z-index: 1;}
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: rgba(15, 15, 15, 0.95) !important; color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important; backdrop-filter: blur(8px);
+}
+.leaflet-popup-content strong { color: #60A5FA; }
+
+/* --- HERO BANNER --- */
+.hero-banner {
+  position: relative; width: 100%; height: 320px; border-radius: 24px; overflow: hidden; margin-bottom: 40px;
+  display: flex; align-items: flex-end; padding: 40px; box-sizing: border-box;
+  background: url('https://images.unsplash.com/photo-1540505330364-77f6ddf7a1f5?auto=format&fit=crop&w=1200&q=80') center/cover;
+}
+.hero-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, #02040A 0%, rgba(2, 4, 10, 0.2) 100%); }
+.hero-content { position: relative; z-index: 10; width: 100%; }
+
+.hero-tag { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; letter-spacing: 1px; }
+.hero-title { font-size: 40px; font-weight: 900; line-height: 1.1; margin: 12px 0; letter-spacing: -1px; }
+.hero-subtitle { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.8); font-size: 15px; margin-bottom: 24px; }
+.hero-cta { background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%); color: #FFF; border: none; padding: 12px 24px; border-radius: 30px; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); transition: transform 0.2s; }
+.hero-cta:hover { transform: translateY(-2px); }
+
+/* --- VENUE FILTERS --- */
+/* --- TERMINAL / PIXEL-ART VENUE FILTERS --- */
+.venue-filters { 
+  display: flex; 
+  gap: 16px; 
+  overflow-x: auto; 
+  padding-bottom: 20px; 
+  margin-bottom: 24px; 
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}
+.venue-filters::-webkit-scrollbar { display: none; }
+
+.venue-pill {
+  background: #ffffff;
+  color: #000000;
+  border: 3px solid #000000;
+  border-radius: 0px; /* Sharp pixel-art edges */
+  padding: 10px 20px;
+  font-family: 'Courier New', Courier, monospace; /* Monospace/Pixel feel */
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  cursor: pointer; 
+  white-space: nowrap; 
+  transition: all 0.1s;
+  
+  /* The signature pixel-art offset shadow using Tykkit Blue */
+  box-shadow: 6px 6px 0px #3B82F6; 
+}
+
+/* Tactile click effect */
+.venue-pill:active {
+  transform: translate(6px, 6px);
+  box-shadow: 0px 0px 0px #3B82F6;
+}
+
+/* The Active State (Inverted for high contrast) */
+.venue-pill.active { 
+  background: #000000; 
+  color: #ffffff; 
+  border-color: #3B82F6;
+  box-shadow: 6px 6px 0px #ffffff;
+}
+
+.venue-pill.active:active {
+  transform: translate(6px, 6px);
+  box-shadow: 0px 0px 0px #ffffff;
+}
+/* --- EVENT CARDS WITH IMAGE BANNERS --- */
+.event-feed { display: flex; flex-direction: column; gap: 24px; margin-bottom: 60px; }
+
+.event-card { 
+  background: rgba(15, 15, 15, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); 
+  border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
+  transition: border-color 0.2s, transform 0.2s; 
+}
+.event-card:hover { border-color: rgba(59, 130, 246, 0.5); transform: translateY(-2px); }
+
+.event-card-banner { height: 180px; width: 100%; background-size: cover; background-position: center; position: relative; box-shadow: inset 0 60px 40px -20px rgba(0,0,0,0.5); }
+.event-tag { position: absolute; top: 16px; right: 16px; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 6px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; }
+
+.event-card-content { padding: 24px; }
+.event-title { font-size: 20px; font-weight: 700; margin: 0 0 8px 0; }
+.event-datetime { font-size: 14px; color: #60A5FA; font-weight: 600; margin: 0 0 4px 0; }
+.event-location { font-size: 13px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 4px; margin: 0;}
+.event-footer { display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 20px; margin-top: 20px; }
+.price-box { display: flex; flex-direction: column; }
+.price-label { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase; margin-bottom: 2px;}
+.event-price { font-size: 20px; font-weight: 800; }
+.book-btn { background: #FFFFFF; color: #000000; border: none; padding: 10px 24px; border-radius: 30px; font-weight: 700; font-size: 14px; cursor: pointer; transition: background 0.2s; }
+.book-btn:hover { background: #E5E7EB; }
+
+.empty-state { text-align: center; padding: 60px 0; color: rgba(255,255,255,0.4); }
+
+/* --- NEW MINIMALIST BRUTALIST FOOTER --- */
+.site-footer {
+  background: #02040A; border-top: 1px solid rgba(255,255,255,0.05); padding: 80px 40px 40px 40px; display: flex; flex-direction: column; gap: 60px; overflow: hidden; 
+}
+.footer-top { display: flex; justify-content: space-between; align-items: flex-start; max-width: 1200px; margin: 0 auto; width: 100%; }
+.footer-slogan h2 { font-size: 24px; font-weight: 500; margin: 0; color: #FFFFFF; }
+.footer-links-grid { display: flex; gap: 120px; }
+.footer-links-grid .link-column { display: flex; flex-direction: column; gap: 16px; }
+.footer-links-grid span { color: rgba(255,255,255,0.6); font-size: 15px; font-weight: 500; cursor: pointer; transition: color 0.2s; }
+.footer-links-grid span:hover { color: #FFFFFF; }
+.footer-massive-text { font-size: clamp(80px, 20vw, 350px); font-weight: 800; letter-spacing: -4px; text-align: center; line-height: 0.8; width: 100%; color: #FFFFFF; }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; width: 100%; padding-top: 40px; }
+.footer-logo .brand-logo-icon { background: transparent; color: #FFFFFF; font-size: 24px; font-weight: 800; padding: 0; }
+.footer-legal { display: flex; gap: 32px; }
+.footer-legal span { color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 500; cursor: pointer; transition: color 0.2s; }
+.footer-legal span:hover { color: #FFFFFF; }
+
+/* Emoji Animation */
+.emoji-particle { position: fixed; pointer-events: none; z-index: 9999; font-size: 40px; animation: floatUpAndFade ease-out forwards; }
+@keyframes floatUpAndFade { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-150px) scale(1.5); opacity: 0; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 1024px) {
+  .hidden-mobile { display: none; }
+  .main-content { padding: 16px; }
+}
+
+@media (max-width: 768px) {
+  .hero-title { font-size: 32px; }
+  .hero-banner { padding: 24px; height: 280px; }
+  .leaflet-map-container { height: 250px; }
+  .site-footer { padding: 40px 24px 32px 24px; gap: 40px; }
+  .footer-top { flex-direction: column; gap: 48px; }
+  .footer-links-grid { gap: 60px; width: 100%; justify-content: space-between; }
+  .footer-massive-text { font-size: 90px; letter-spacing: -5px; }
+  .footer-bottom { flex-direction: column; gap: 32px; align-items: flex-start; }
+  .footer-legal { flex-wrap: wrap; gap: 16px; }
+}
+
+
+/* ==========================================================
+   TERMINAL / Y2K ACTION UI (Checkout Modal)
+   Inspired by Reference, Adapted to Tykkit Blue (#3B82F6)
+========================================================== */
+
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  /* Pitch black overlay to isolate the form */
+  background: rgba(0, 0, 0, 0.92); 
+  display: flex; justify-content: center; align-items: center;
+  z-index: 10000; animation: fadeIn 0.2s ease-out;
+}
+
+/* The Pop-up Container: Pure flat design */
+.checkout-modal {
+  background: #000000; 
+  border: 1px solid #ffffff; /* Crisp, thin white border */
+  border-radius: 0px; /* Absolute sharp corners */
+  width: 90%; max-width: 500px; padding: 40px;
+  position: relative;
+  color: white;
+  box-shadow: none; /* No shadows in terminal UI */
+}
+
+/* Terminal-style close button */
+.close-modal-btn {
+  position: absolute; top: 20px; right: 20px; 
+  background: transparent; border: none; color: rgba(255,255,255,0.5);
+  font-family: 'Courier New', Courier, monospace; 
+  font-size: 14px; letter-spacing: 1px;
+  cursor: pointer; transition: color 0.2s;
+}
+.close-modal-btn:hover { color: #fff; }
+.close-modal-btn svg { display: none; } /* Hides the X icon */
+.close-modal-btn::before { content: "[ CLOSE ]"; } /* Replaces it with text */
+
+/* Text Headers */
+.checkout-header { margin-bottom: 30px; }
+.checkout-header h2 { 
+  font-size: 32px; margin: 0; color: #fff; 
+  text-transform: uppercase; font-weight: 900; letter-spacing: -1px;
+}
+.checkout-header p { 
+  margin: 8px 0 0 0; color: #3B82F6; 
+  font-family: 'Courier New', Courier, monospace; font-size: 14px;
+}
+
+/* The Form Elements */
+.checkout-form { display: flex; flex-direction: column; gap: 24px; }
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+
+/* Lowercase monospace labels from your image */
+.form-group label { 
+  font-family: 'Courier New', Courier, monospace; 
+  font-size: 13px; color: #fff; 
+  text-transform: lowercase; 
+}
+/* Adding the // accent to the end of labels */
+.form-group label::after { 
+  content: " //"; color: #3B82F6; 
+}
+
+/* Crisp Input Boxes */
+.form-group input, .form-group select {
+  background: transparent;
+  border: 1px solid #ffffff;
+  padding: 16px;
+  border-radius: 0px;
+  color: #fff; font-size: 18px; font-weight: 500;
+  font-family: 'Courier New', Courier, monospace;
+  outline: none; transition: border-color 0.1s;
+}
+
+.form-group input:focus, .form-group select:focus {
+  border-color: #3B82F6;
+  border-width: 2px;
+  padding: 15px; /* Offset the 1px border jump */
+}
+
+/* THE MASSIVE BUTTON FROM THE IMAGE */
+.confirm-btn {
+  background: #3B82F6; /* Tykkit Blue */
+  color: #02040A; /* Deep black text for max contrast */
+  border: none;
+  padding: 16px 20px;
+  border-radius: 0px;
+  font-size: 28px; /* Massive text */
+  font-weight: 900; 
+  text-transform: uppercase; 
+  letter-spacing: -1px;
+  margin-top: 16px; cursor: pointer; 
+  
+  /* Flex layout to push text left and arrow right */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Adding the right arrow directly in CSS */
+.confirm-btn::after {
+  content: "→";
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 400;
+  font-size: 32px;
+}
+
+.confirm-btn:hover { background: #60A5FA; }
+
+.confirm-btn:disabled { 
+  background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); 
+  cursor: not-allowed; 
+}
+
+/* Success State */
+.success-state { text-align: center; padding: 40px 0; }
+.success-icon { font-size: 60px; margin-bottom: 20px; animation: floatUpAndFade 0.5s ease-out alternate infinite; }
+
+/* ==========================================================
+   EPIC 2: THE TICKET REVEAL & ID BADGE
+========================================================== */
+
+.ticket-reveal-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: radial-gradient(circle at center, #0a1128 0%, #000000 100%);
+  z-index: 20000;
+  display: flex; justify-content: center; align-items: center;
+  perspective: 1000px; /* Needed for 3D swing */
+  animation: flashIn 0.3s ease-out;
+}
+
+@keyframes flashIn {
+  0% { background: #ffffff; opacity: 0; }
+  50% { background: #3B82F6; opacity: 1; }
+  100% { background: radial-gradient(circle at center, #0a1128 0%, #000000 100%); }
+}
+
+/* --- THE PIXEL CORNERS (Using CSS Gradients) --- */
+.pixel-frame {
+  position: absolute; top: 20px; left: 20px; right: 20px; bottom: 20px;
+  pointer-events: none;
+  background:
+    /* Top Left Staircase */
+    linear-gradient(#3B82F6, #3B82F6) 0 0 / 60px 15px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 0 0 / 45px 30px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 0 0 / 30px 45px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 0 0 / 15px 60px no-repeat,
+    /* Top Right Staircase */
+    linear-gradient(#3B82F6, #3B82F6) 100% 0 / 60px 15px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 100% 0 / 45px 30px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 100% 0 / 30px 45px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 100% 0 / 15px 60px no-repeat,
+    /* Bottom Left Staircase */
+    linear-gradient(#3B82F6, #3B82F6) 0 100% / 60px 15px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 0 100% / 45px 30px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 0 100% / 30px 45px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 0 100% / 15px 60px no-repeat,
+    /* Bottom Right Staircase */
+    linear-gradient(#3B82F6, #3B82F6) 100% 100% / 60px 15px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 100% 100% / 45px 30px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 100% 100% / 30px 45px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 100% 100% / 15px 60px no-repeat;
+}
+
+/* --- THE ID BADGE --- */
+.id-badge {
+  width: 380px; height: 600px;
+  background: #111111;
+  border-radius: 16px;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.1);
+  display: flex; flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  /* THE SWING ANIMATION */
+  transform-origin: top center;
+  animation: lanyardDrop 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes lanyardDrop {
+  0% { transform: translateY(-100vh) rotateX(45deg); opacity: 0; }
+  50% { transform: translateY(5vh) rotateX(-20deg); opacity: 1; }
+  75% { transform: translateY(-2vh) rotateX(10deg); }
+  100% { transform: translateY(0) rotateX(0deg); }
+}
+
+/* The Lanyard Hole */
+.lanyard-hole {
+  width: 60px; height: 12px;
+  background: #000;
+  border-radius: 20px;
+  margin: 20px auto;
+  border: 2px solid #333;
+  box-shadow: inset 0 5px 10px rgba(0,0,0,1);
+}
+
+.badge-header { padding: 0 30px; display: flex; justify-content: space-between; align-items: center; }
+.badge-logo { font-size: 20px; font-weight: 900; letter-spacing: -1px; color: #fff; }
+.badge-tier-icon { background: #3B82F6; color: #000; padding: 4px 8px; font-weight: 900; border-radius: 4px; font-family: 'Courier New', monospace; }
+
+/* The Holographic / Topo Photo Area */
+.badge-photo-area {
+  flex: 1;
+  margin: 20px 30px;
+  background: 
+    radial-gradient(circle at center, rgba(59, 130, 246, 0.2) 0%, transparent 70%),
+    repeating-radial-gradient(circle at center, transparent 0, transparent 4px, rgba(255,255,255,0.05) 5px, transparent 6px);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; justify-content: center; align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.badge-avatar-placeholder { font-size: 80px; filter: grayscale(1); opacity: 0.8; }
+.badge-event-title { position: absolute; bottom: 15px; left: 15px; font-size: 24px; font-weight: 900; color: #fff; line-height: 1; text-transform: uppercase; text-shadow: 2px 2px 0 #000; }
+
+/* The Data Table (Bottom Section) */
+.badge-data-section {
+  background: #111111; /* The industrial grey from your image */
+  padding: 20px;
+  color: #000;
+  border-top: 4px solid #3B82F6;
+}
+
+.data-grid { display: grid; grid-template-columns: 1fr auto; gap: 15px; }
+.data-col { display: flex; flex-direction: column; gap: 10px; border-right: 1px solid #aaa; padding-right: 15px; }
+.data-item label { font-family: 'Courier New', monospace; font-size: 9px; text-transform: uppercase; color: #555; display: block; margin-bottom: 2px; font-weight: bold; }
+.data-item p { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 900; margin: 0; text-transform: uppercase; letter-spacing: -0.5px; }
+
+/* CSS simulated QR Code */
+.qr-code-box {
+  width: 70px; height: 70px;
+  background: 
+    linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
+    linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000);
+  background-color: #fff;
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+  border: 2px solid #000;
+  padding: 4px;
+}
+.qr-container { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+/* Close Button for Reveal */
+.close-reveal-btn {
+  position: absolute; bottom: 40px;
+  background: transparent; border: 2px solid #3B82F6; color: #3B82F6;
+  padding: 12px 30px; font-family: 'Courier New', monospace; font-weight: bold;
+  cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
+  transition: all 0.2s;
+}
+.close-reveal-btn:hover { background: #3B82F6; color: #000; }
+
+@media (max-width: 768px) {
+  .id-badge { transform: scale(0.85); }
+}
+/* ==========================================================
+   EPIC 2: TICKET REVEAL & CELEBRATION SCREENS
+========================================================== */
+
+/* --- 1. THE BADGE REVEAL OVERLAY --- */
+.ticket-reveal-overlay, .celebration-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #02040A; /* Deep Tykkit Dark */
+  z-index: 20000;
+  display: flex; justify-content: center; align-items: center;
+  perspective: 1000px;
+  overflow: hidden;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* --- THE MASSIVE CHUNKY PIXEL CORNERS --- */
+.pixel-frame-chunky {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  background:
+    /* Top Left Chunky Staircase */
+    linear-gradient(#3B82F6, #3B82F6) 0 0 / 120px 30px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 0 0 / 90px 60px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 0 0 / 60px 90px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 0 0 / 30px 120px no-repeat,
+    /* Top Right Chunky Staircase */
+    linear-gradient(#3B82F6, #3B82F6) 100% 0 / 120px 30px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 100% 0 / 90px 60px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 100% 0 / 60px 90px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 100% 0 / 30px 120px no-repeat,
+    /* Bottom Left Chunky Staircase */
+    linear-gradient(#3B82F6, #3B82F6) 0 100% / 120px 30px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 0 100% / 90px 60px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 0 100% / 60px 90px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 0 100% / 30px 120px no-repeat,
+    /* Bottom Right Chunky Staircase */
+    linear-gradient(#3B82F6, #3B82F6) 100% 100% / 120px 30px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 100% 100% / 90px 60px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 100% 100% / 60px 90px no-repeat,
+    linear-gradient(#3B82F6, #3B82F6) 100% 100% / 30px 120px no-repeat;
+}
+
+/* --- THE ID BADGE (from previous step, included for safety) --- */
+.id-badge {
+  width: 380px; height: 600px; background: #111; border-radius: 16px;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 0 2px #3B82F6;
+  display: flex; flex-direction: column; position: relative; overflow: hidden;
+  transform-origin: top center; z-index: 10;
+  animation: lanyardDrop 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+@keyframes lanyardDrop {
+  0% { transform: translateY(-100vh) rotateX(45deg); opacity: 0; }
+  100% { transform: translateY(0) rotateX(0deg); opacity: 1; }
+}
+
+.lanyard-hole { width: 60px; height: 12px; background: #000; border-radius: 20px; margin: 20px auto; border: 2px solid #333; }
+.badge-header { padding: 0 30px; display: flex; justify-content: space-between; align-items: center; }
+.badge-logo { font-size: 20px; font-weight: 900; color: #fff; }
+.badge-tier-icon { background: #3B82F6; color: #000; padding: 4px 8px; font-weight: 900; border-radius: 4px; font-family: monospace; }
+.badge-photo-area { flex: 1; margin: 20px 30px; background: radial-gradient(circle, rgba(59,130,246,0.2), transparent); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; display: flex; justify-content: center; align-items: center; position: relative; }
+.badge-event-title { position: absolute; bottom: 15px; left: 15px; font-size: 24px; font-weight: 900; color: #fff; text-transform: uppercase; }
+.badge-data-section { background: #111111; padding: 20px; color: #000; border-top: 4px solid #3B82F6; }
+.data-grid { display: grid; grid-template-columns: 1fr auto; gap: 15px; }
+.data-col { display: flex; flex-direction: column; gap: 10px; border-right: 1px solid #aaa; padding-right: 15px; }
+.data-item label { font-family: monospace; font-size: 10px; color: #555; font-weight: bold; }
+.data-item p { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 900; margin: 0; text-transform: uppercase; }
+.qr-code-box { width: 70px; height: 70px; background: repeating-linear-gradient(45deg, #000 0, #000 2px, transparent 2px, transparent 4px); background-color: #fff; border: 2px solid #000; }
+
+/* Acknowledge Button */
+.acknowledge-btn {
+  position: absolute; bottom: 40px; background: #3B82F6; color: #000;
+  border: none; padding: 16px 32px; font-size: 18px; font-weight: 900;
+  font-family: 'Courier New', monospace; cursor: pointer; text-transform: uppercase;
+  box-shadow: 6px 6px 0px #fff; transition: all 0.1s; z-index: 10;
+}
+.acknowledge-btn:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px #fff; }
+
+/* --- 2. CELEBRATION SCREEN STYLES --- */
+.thank-you-container {
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(60px, 10vw, 150px);
+  font-weight: 900; color: #fff; letter-spacing: -2px; z-index: 10;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+/* The Character Faces inside the "O"s */
+.custom-o {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 1em; height: 1em; border-radius: 50%; margin: 0 0.1em; position: relative;
+}
+.blue-face { background: #3B82F6; border-radius: 50% 50% 0 0; } /* Ghost shape */
+.pink-face { background: #EC4899; }
+.face-eyes { font-size: 0.4em; display: flex; gap: 0.2em; position: absolute; top: 0.2em; }
+.face-mouth { width: 0.3em; height: 0.15em; background: #000; border-radius: 0 0 1em 1em; position: absolute; bottom: 0.2em; }
+.bubble-gum { position: absolute; right: -0.3em; bottom: -0.1em; font-size: 0.6em; }
+
+/* Floating Elements (Background) */
+.floating-element { position: absolute; font-size: 40px; opacity: 0.8; user-select: none; pointer-events: none; }
+.float-1 { animation: floatAnim 6s ease-in-out infinite; }
+.float-2 { animation: floatAnim 8s ease-in-out infinite reverse; }
+.float-3 { animation: floatAnim 7s ease-in-out infinite 1s; }
+@keyframes floatAnim { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-40px) rotate(10deg); } }
+
+.profile-view{
+   padding: 20px; 
+   margin: 0 auto;
+   width: 100% ;
+}
+.profile-form{
+  background: #111;
+  width:500px;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  margin-top: 30px;
+  margin-right:25px;
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS FIXES
+========================================= */
+@media (max-width: 768px) {
+  /* 1. Transform Header Tabs into a Bottom App Bar */
+  .dashboard-nav-tabs {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-bottom: -10px;
+    padding: 10px 0px !important;
+    height:20px;
+    background: rgba(10, 10, 10, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border-top: 1px solid #333 !important;
+    justify-content: space-around !important;
+    z-index: 1000 !important;
+  }
+
+  /* Add padding to the bottom of the screen so the nav bar doesn't hide content */
+  .main-content {
+    padding-bottom: 90px !important;
+  }
+
+  /* Hide search bar on mobile to keep header clean */
+  .header-actions .search-bar {
+    display: none !important;
+  }
+
+  /* 2. Fix Event Cards (Stacking the footer) */
+  .event-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
+  }
+
+  .event-footer .book-btn {
+    width: 100% !important;
+    margin-top: 5px !important;
+  }
+
+  /* Target the Live Stats so they stack cleanly */
+  .live-stats-container {
+    flex-direction: column !important;
+    gap: 5px !important;
+  }
+
+  /* 3. Fix Vault & Profile Views */
+  .ticket-grid {
+    grid-template-columns: 1fr !important;
+    padding-bottom: 40px !important;
+  }
+
+  .id-badge {
+    width: 100% !important;
+    transform: scale(0.9) !important;
+  }
+
+  .profile-form {
+    padding: 20px !important;
+  }
+  
+.profile-view{
+   padding: 20px !important;
+   margin: 0 auto !important;
+   width: 100% !important;
+}
+.profile-form{
+  width:300px !important;
+}
+.thank-you-container{
+  font-size: clamp(45px, 10vw, 150px);
+}
+
+}
+.premium-vault-card {
+  background: #0a0a0a;
+  border: 1px solid #222;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.premium-vault-card:hover {
+  transform: translateY(-5px);
+  border-color: #3B82F6;
+}
+
+.vault-card-header {
+  height: 120px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border-bottom: 2px dashed #333;
+}
+
+/* Dark overlay so the status badge pops */
+.vault-card-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.9));
+}
+
+.vault-status-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 230, 118, 0.15);
+  color: #00E676;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(0, 230, 118, 0.3);
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  background: #00E676;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #00E676;
+}
+
+.vault-card-body {
+  padding: 20px;
+  flex: 1;
+}
+
+.vault-event-title {
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.vault-event-meta {
+  color: #888;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.vault-divider {
+  height: 1px;
+  background: #222;
+  margin: 15px 0;
+}
+
+.vault-ticket-data {
+  display: flex;
+  justify-content: space-between;
+}
+
+.vault-ticket-data label {
+  display: block;
+  color: #666;
+  font-size: 10px;
+  font-family: monospace;
+  margin-bottom: 4px;
+}
+
+.vault-ticket-data span {
+  color: #ddd;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.vault-card-actions {
+  display: flex;
+  border-top: 1px solid #222;
+}
+
+.vault-btn {
+  flex: 1;
+  padding: 15px;
+  background: transparent;
+  border: none;
+  font-family: monospace;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s ease;
+}
+
+.vault-btn:first-child {
+  border-right: 1px solid #222;
+}
+
+.vault-btn.primary {
+  color: #3B82F6;
+}
+.vault-btn.primary:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.vault-btn.danger {
+  color: #ff4444;
+}
+.vault-btn.danger:hover {
+  background: rgba(255, 68, 68, 0.1);
+}
+.notification-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background: #ff4444;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #ff4444;
+  border: 2px solid #000;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 300px;
+  background: rgba(15, 15, 15, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  z-index: 1000;
+  overflow: hidden;
+  font-family: monospace;
+  animation: slideDown 0.2s ease forwards;
+}
+
+.notify-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  border-bottom: 1px solid #222;
+  font-size: 13px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.notify-item:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.notify-item:last-child {
+  border-bottom: none;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Ensure search bar stays active when typed in */
+.search-bar input:focus {
+  color: #fff;
+  outline: none;
+}
+
+/* =========================================
+   TACTICAL MAP MARKERS & RADAR PULSE
+========================================= */
+.tactical-marker {
+  background: transparent;
+  border: none;
+}
+
+.radar-dot {
+  width: 14px;
+  height: 14px;
+  background-color: #3B82F6;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px #3B82F6, 0 0 20px #3B82F6;
+  border: 2px solid #fff;
+  z-index: 2;
+}
+
+.radar-ring {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #3B82F6;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: radarPulse 2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+  z-index: 1;
+}
+
+/* Make Hot/Featured events pulse red! */
+.hot-zone .radar-dot {
+  background-color: #ff4444;
+  box-shadow: 0 0 10px #ff4444, 0 0 20px #ff4444;
+}
+.hot-zone .radar-ring {
+  border-color: #ff4444;
+  animation: radarPulse 1.5s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+@keyframes radarPulse {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+/* Smooth out the map container */
+.leaflet-map-container {
+  border-radius: 12px;
+  border: 1px solid #333;
+}

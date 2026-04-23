@@ -1,0 +1,200 @@
+/* ==========================================================
+   Tykkit.fr - Stateful Splash & Login Layout
+========================================================== */
+
+/* 1. Full Screen Background */
+.onboarding-screen {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Anchors everything to the bottom */
+  position: relative;
+  
+  background-color: #02040A;
+  background-image: url('/premium-bg-mobile.png'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  color: #FFFFFF;
+  font-family: 'Inter', -apple-system, sans-serif;
+  overflow: hidden;
+  padding-bottom: 40px; /* Space for the ticker */
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .onboarding-screen {
+    background-image: url('/premium-bg.png'); 
+    align-items: center; /* Centers on desktop */
+  }
+}
+
+/* 2. The Content Block */
+.onboarding-content {
+  width: 100%;
+  max-width: 500px;
+  padding: 0 24px 40px 24px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  z-index: 10;
+  text-align: left; /* Left aligned like your image */
+}
+
+/* 3. The Dark Logo Badge (From your image) */
+.logo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 15, 15, 0.7); /* Dark translucent background */
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 24px;
+  width: fit-content;
+}
+
+.brand-logo-icon {
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -2px;
+}
+
+.brand-logo-text {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+}
+
+/* 4. Exact Typography Match */
+.hero-heading {
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  margin: 0 0 16px 0;
+}
+
+.text-blue {
+  color: #81A1FF; /* Soft blue from the image */
+}
+
+.hero-subheading {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+  font-weight: 500;
+}
+
+/* The horizontal white line */
+.accent-line {
+  height: 2px;
+  width: 60px;
+  background-color: #FFFFFF;
+  margin: 8px 0 32px 0;
+}
+
+/* 5. Minimal Form Inputs */
+.input-label {
+  display: block;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.premium-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08); 
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.premium-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.premium-input:focus {
+  border-color: #3B82F6;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* 6. The Solid Blue Button */
+.enter-button {
+  width: 100%;
+  background: #3B82F6; /* Solid blue matching your image */
+  color: white;
+  border: none;
+  border-radius: 12px; /* Slightly softer corners */
+  padding: 18px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+}
+
+.enter-button:active {
+  transform: translateY(2px);
+}
+
+/* 7. Footer Text */
+.auth-footer {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+}
+
+/* 8. The Bottom Ticker Tape */
+.ticker-wrap {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #FFFFFF;
+  color: #2563EB;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  z-index: 20;
+}
+
+.ticker-track {
+  display: flex;
+  white-space: nowrap;
+  animation: scroll 20s linear infinite;
+}
+
+.ticker-item {
+  padding-right: 12px;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* Scrolls exactly half to loop smoothly */
+}
+
+/* Smooth Fade transition classes */
+.fade-in {
+  animation: fadeIn 0.4s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
