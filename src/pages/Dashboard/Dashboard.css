@@ -44,7 +44,7 @@
 .brand-logo-icon { background: #3B82F6; color: #fff; padding: 6px 10px; border-radius: 8px; font-weight: 800; font-size: 14px; }
 .brand-logo-text { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
 
-.header-actions { display: flex; align-items: center; gap: 16px; }
+.header-actions { display: flex; padding-bottom:20px;align-items: center; gap: 16px; }
 
 .search-bar {
   display: flex; gap: 8px; align-items: center;
@@ -685,7 +685,7 @@
    width: 100% !important;
 }
 .profile-form{
-  width:300px !important;
+  width:max-content !important;
 }
 .thank-you-container{
   font-size: clamp(45px, 10vw, 150px);
