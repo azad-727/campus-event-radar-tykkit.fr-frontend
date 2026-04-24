@@ -63,8 +63,8 @@ const OrganizerDashboard = () => {
       const token = localStorage.getItem('tykkit_jwt');
       const headers = { 'Authorization': `Bearer ${token}` };
       const [insightsRes, usersRes] = await Promise.all([
-        fetch('http://localhost:8080/api/v1/admin/insights', { headers }),
-        fetch('http://localhost:8080/api/v1/admin/users', { headers })
+        fetch('https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/admin/insights', { headers }),
+        fetch('https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/admin/users', { headers })
       ]);
       if (insightsRes.ok) setInsights(await insightsRes.json());
       if (usersRes.ok) {
@@ -80,7 +80,7 @@ const OrganizerDashboard = () => {
 
     try {
       const token = localStorage.getItem('tykkit_jwt');
-      const res = await fetch(`http://localhost:8080/api/v1/admin/scan`, {
+      const res = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/admin/scan`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}`,
                    'Content-Type': 'application/json'
@@ -104,7 +104,7 @@ const OrganizerDashboard = () => {
     setSelectedUser(user);
     try {
       const token = localStorage.getItem('tykkit_jwt');
-      const res = await fetch(`http://localhost:8080/api/v1/admin/users/${user.academicRollNo}/history`, {
+      const res = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/admin/users/${user.academicRollNo}/history`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) setUserHistory(await res.json());
@@ -170,7 +170,7 @@ const OrganizerDashboard = () => {
           { k: 'image', v: eventData.image }
         ]
       };
-      const response = await fetch('http://localhost:8080/api/v1/events', {
+      const response = await fetch('https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(payload)

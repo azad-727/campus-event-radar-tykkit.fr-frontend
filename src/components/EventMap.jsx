@@ -14,7 +14,7 @@ const EventMap = () => {
   useEffect(() => {
     // Connect to your Spring Boot WebSocket Server
     const stompClient = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+      webSocketFactory: () => new SockJS('https://campus-event-radar-tykkit-fr-backend-1.onrender.com/ws'),
       reconnectDelay: 5000,
       
       onConnect: () => {

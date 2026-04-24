@@ -48,7 +48,7 @@ const LiveEventStats = ({ eventId }) => {
         };
 
         // 1. Pass the fetchOptions into the seat request
-        const seatRes = await fetch(`http://localhost:8080/api/v1/events/${eventId}/seats`, fetchOptions);
+        const seatRes = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events/${eventId}/seats`, fetchOptions);
         if (seatRes.ok) {
           const seatData = await seatRes.json();
           const finalSeats = (seatData.availableSeats !== null && seatData.availableSeats !== undefined) 
@@ -60,7 +60,7 @@ const LiveEventStats = ({ eventId }) => {
         
 
         // 2. Pass the fetchOptions into the countdown request
-        const timeRes = await fetch(`http://localhost:8080/api/v1/events/${eventId}/countdown`, fetchOptions);
+        const timeRes = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events/${eventId}/countdown`, fetchOptions);
         if (timeRes.ok) {
           const timeData = await timeRes.json();
           if (timeData.secondsRemaining > 0) {
@@ -151,7 +151,7 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
       const fetchVault = async () => {
         try {
           const token=localStorage.getItem('tykkit_jwt');
-          const response = await fetch(`http://localhost:8080/api/v1/events/my-passes/${user.studentId}`,{
+          const response = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events/my-passes/${user.studentId}`,{
             method:'GET',
             headers:{
               'Content-Type':'application/json',
@@ -194,7 +194,7 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
     }));
     const fetchEvents = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v1/events', {
+        const response = await fetch('https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) throw new Error("Failed to fetch events");
@@ -226,7 +226,7 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
 
     const fetchVibes = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v1/vibes', {
+        const response = await fetch('https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/vibes', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {
@@ -268,7 +268,7 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
 
     try {
       const token = localStorage.getItem('tykkit_jwt');
-      await fetch(`http://localhost:8080/api/v1/vibes/${id}/increment`, {
+      await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/vibes/${id}/increment`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -323,7 +323,7 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
     // 1. Initialize the STOMP Client
     const stompClient = new Client({
       // NOTE: Update this URL if your Spring Boot WebSocketConfig uses a different endpoint!
-      brokerURL: 'ws://localhost:8080/ws', 
+      brokerURL: 'wss://campus-event-radar-tykkit-fr-backend-1.onrender.com/ws', 
       reconnectDelay: 5000,
       
       onConnect: () => {
@@ -377,7 +377,7 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
       };
 
       // RUBRIC 3a: POST /events/:id/register
-      const response = await fetch(`http://localhost:8080/api/v1/events/${selectedEvent.id}/register`, {
+      const response = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events/${selectedEvent.id}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -417,7 +417,7 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
     try {
       const token = localStorage.getItem('tykkit_jwt');
       
-      const response = await fetch(`http://localhost:8080/api/v1/events/${eventId}/register?studentId=${user.studentId}`, {
+      const response = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events/${eventId}/register?studentId=${user.studentId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

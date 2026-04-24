@@ -9,12 +9,12 @@ export const LiveEventStats = ({ eventId }) => {
     const fetchStats = async () => {
       try {
         // Fetch Live Seats
-        const seatRes = await fetch(`http://localhost:8080/api/v1/events/${eventId}/seats`);
+        const seatRes = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events/${eventId}/seats`);
         const seatData = await seatRes.json();
         setSeats(seatData.availableSeats);
 
         // Fetch Live Countdown
-        const timeRes = await fetch(`http://localhost:8080/api/v1/events/${eventId}/countdown`);
+        const timeRes = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events/${eventId}/countdown`);
         const timeData = await timeRes.json();
         
         if (timeData.secondsRemaining > 0) {
