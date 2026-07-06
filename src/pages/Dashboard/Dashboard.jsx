@@ -129,7 +129,8 @@ const Dashboard = () => {
     { id: 2, text: "System connection established.", read: true }
   ]);
 
-const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRollNo: '' }); 
+  const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRollNo: '' }); 
+  const [profileNameInput, setProfileNameInput] = useState('');
   const logout = () => { localStorage.clear(); navigate('/login'); };
 
   // --- NEW: CHECKOUT MODAL STATE ---
@@ -186,6 +187,7 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
       email: currentEmail,
       studentId: currentId
     });
+    setProfileNameInput(currentName);
     setFormData(prev => ({
       ...prev,
       attendeeName: currentName,
@@ -194,7 +196,7 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
     }));
     const fetchEvents = async () => {
       try {
-        const response = await fetch('https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events', {
+        const response = await fetch('https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events?status=ALL', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) throw new Error("Failed to fetch events");
@@ -214,6 +216,7 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
             location: attrs.locationName || "TBD",
             venueId: attrs.venueId || "all",
             price: attrs.price || "FREE",
+            status: event.status || "UPCOMING",
             image: attrs.image || "https://images.unsplash.com/photo-1540505330364-77f6ddf7a1f5?auto=format&fit=crop&w=800&q=80",
             coords: event.location ? [event.location.y, event.location.x] : [13.3525, 74.7928]
           };
@@ -338,6 +341,15 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
              triggerTicketReveal();
           }
         });
+
+        // 4. Listen for system-wide notifications
+        stompClient.subscribe('/topic/notifications', (message) => {
+          setNotifications(prev => [
+            { id: Date.now(), text: message.body, read: false },
+            ...prev
+          ]);
+          if (navigator.vibrate) navigator.vibrate([100, 50, 100]); // Haptic alert
+        });
       },
       onWebSocketError: (error) => {
         console.error("🔴 WebSocket Error:", error);
@@ -365,16 +377,26 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
   // --- RUBRIC-COMPLIANT BOOKING SUBMISSION ---
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
-    setBookingStatus('loading'); 
+    setBookingStatus('processing_payment'); 
     
     try {
       const token = localStorage.getItem('tykkit_jwt');
       
-      // We only need to send the studentId in the body now
-      // The eventId is in the URL!
       const payload = {
         studentId: formData.studentIdNumber 
       };
+
+      // MOCK PAYMENT FLOW
+      if (selectedEvent.price !== 'FREE' && selectedEvent.price !== 0 && selectedEvent.price !== '0') {
+        const payRes = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/payments/checkout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ eventId: selectedEvent.id, studentId: formData.studentIdNumber, amount: selectedEvent.price })
+        });
+        if (!payRes.ok) throw new Error("Payment failed.");
+      }
+      
+      setBookingStatus('loading');
 
       // RUBRIC 3a: POST /events/:id/register
       const response = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events/${selectedEvent.id}/register`, {
@@ -410,14 +432,14 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
       alert("Failed to process request: " + error.message);
     }
   };
-  const handleCancelPass = async (eventId) => {
+  const handleCancelPass = async (eventId, regId) => {
     
     if (!window.confirm("Are you sure you want to cancel this pass? This will free up your seat for someone else.")) return;
 
     try {
       const token = localStorage.getItem('tykkit_jwt');
       
-      const response = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events/${eventId}/register?studentId=${user.studentId}`, {
+      const response = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/events/${eventId}/register/${regId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -425,7 +447,7 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
       });
 
       if (response.ok) {
-       setMyPasses(prev => prev.filter(pass => pass.eventId !== eventId));
+       setMyPasses(prev => prev.filter(pass => pass.id !== regId));
         
         if (navigator.vibrate) navigator.vibrate(50);
       } else {
@@ -435,7 +457,30 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
       console.error("Cancellation error:", error);
     }
   };
+  
+  const handleProfileUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('tykkit_jwt');
+      const res = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/users/profile`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ studentId: user.studentId, name: profileNameInput })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUser(prev => ({ ...prev, name: data.name }));
+        localStorage.setItem('tykkit_user', data.name);
+        setUserName(data.name.split(' ')[0]);
+        alert("Identity updated successfully!");
+      }
+    } catch (err) {
+      alert("Failed to update profile.");
+    }
+  };
+
   const filteredEvents = dbEvents.filter(event => {
+    if (event.status === 'COMPLETED' || event.status === 'CANCELLED') return false;
     const matchesVenue = activeVenue === 'all' || event.venueId === activeVenue;
     const matchesSearch = 
       event.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -708,7 +753,7 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
                          <div style={{ background: '#fff', padding: '5px', borderRadius: '4px', border: '2px solid #333' }}>
                            <QRCodeSVG 
                              // This is the data the scanner will read!
-                             value={`tykkit-auth://event/${pass.eventId}/user/${user.studentId}`} 
+                             value={pass.ticketHash || `tykkit-auth://event/${pass.eventId}/user/${user.studentId}`} 
                              size={70} 
                              bgColor={"#ffffff"} 
                              fgColor={"#000000"} 
@@ -720,34 +765,40 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
                        {/* BOTTOM ROW: Hash and Status */}
                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '10px' }}>
                          <div>
-                           <p style={{ fontFamily: 'monospace', fontWeight: 'bold', color: '#888', fontSize: '10px', marginBottom: '2px' }}>TICKET HASH</p>
-                           <p style={{ fontFamily: 'monospace', fontWeight: 'bold', color: '#fff' }}>{pass.eventId.substring(pass.eventId.length - 8).toUpperCase()}</p>
+                           <p style={{ fontFamily: 'monospace', fontWeight: 'bold', color: '#888', fontSize: '10px', marginBottom: '2px' }}>TICKET ID</p>
+                           <p style={{ fontFamily: 'monospace', fontWeight: 'bold', color: '#fff' }}>{pass.ticketId || pass.eventId.substring(pass.eventId.length - 8).toUpperCase()}</p>
                          </div>
                          <p style={{ fontFamily: 'monospace', fontWeight: 'bold', color: '#00E676' }}>STATUS: {pass.status || 'CONFIRMED'}</p>
                        </div>
                     </div>
 
-                    {/* Integrated Cancel Button */}
-                    <button 
-                       onClick={() => handleCancelPass(pass.eventId)}
-                       style={{ 
-                         background: 'transparent', 
-                         color: '#ff4444', 
-                         border: 'none', 
-                         borderTop: '1px dashed #333',
-                         padding: '15px', 
-                         fontFamily: 'monospace', 
-                         fontWeight: 'bold', 
-                         cursor: 'pointer',
-                         transition: 'background 0.2s ease, color 0.2s ease',
-                         width: '100%',
-                         letterSpacing: '1px'
-                       }}
-                       onMouseOver={(e) => { e.target.style.background = '#ff4444'; e.target.style.color = '#000'; }}
-                       onMouseOut={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#ff4444'; }}
-                    >
-                      [ TERMINATE PASS ]
-                    </button>
+                     {/* Integrated Cancel Button */}
+                     {linkedEvent?.status !== 'COMPLETED' && linkedEvent?.status !== 'CANCELLED' ? (
+                       <button 
+                          onClick={() => handleCancelPass(pass.eventId, pass.id)}
+                          style={{ 
+                            background: 'transparent', 
+                            color: '#ff4444', 
+                            border: 'none', 
+                            borderTop: '1px dashed #333',
+                            padding: '15px', 
+                            fontFamily: 'monospace', 
+                            fontWeight: 'bold', 
+                            cursor: 'pointer',
+                            transition: 'background 0.2s ease, color 0.2s ease',
+                            width: '100%',
+                            letterSpacing: '1px'
+                          }}
+                          onMouseOver={(e) => { e.target.style.background = '#ff4444'; e.target.style.color = '#000'; }}
+                          onMouseOut={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#ff4444'; }}
+                       >
+                         [ TERMINATE PASS ]
+                       </button>
+                     ) : (
+                       <div style={{ padding: '15px', textAlign: 'center', color: '#888', borderTop: '1px dashed #333', fontFamily: 'monospace', fontWeight: 'bold' }}>
+                         [ EVENT ENDED ]
+                       </div>
+                     )}
                   </div>
                 );
               })}
@@ -764,10 +815,10 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
               // IDENTITY VERIFICATION
             </h2>
             
-            <div className="profile-form" >
+            <form className="profile-form" onSubmit={handleProfileUpdate}>
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ color: '#888', fontFamily: 'monospace', fontSize: '12px', display: 'block', marginBottom: '5px'  }}>ATTENDEE NAME</label>
-                <input type="text" defaultValue={user.name} style={{ width: '90%', padding: '15px', background: '#000', border: '1px solid #333', color: '#fff', fontSize: '16px', fontFamily: 'monospace'}} />
+                <input type="text" value={profileNameInput} onChange={(e) => setProfileNameInput(e.target.value)} style={{ width: '90%', padding: '15px', background: '#000', border: '1px solid #333', color: '#fff', fontSize: '16px', fontFamily: 'monospace'}} />
               </div>
 
               <div style={{ marginBottom: '20px' }}>
@@ -777,17 +828,17 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
 
               <div style={{ marginBottom: '30px' }}>
                 <label style={{ color: '#888', fontFamily: 'monospace', fontSize: '12px', display: 'block', marginBottom: '5px' }}>STUDENT ID</label>
-                <input type="text" defaultValue={user.studentId} style={{ width: '90%', padding: '15px', background: '#000', border: '1px solid #333', color: '#fff', fontSize: '16px', fontFamily: 'monospace' }} />
+                <input type="text" defaultValue={user.studentId} disabled style={{ width: '90%', padding: '15px', background: '#0a0a0a', border: '1px solid #222', color: '#555', fontSize: '16px', fontFamily: 'monospace', cursor: 'not-allowed' }} />
               </div>
 
-              <button style={{ width: '100%', background: '#fff', color: '#000', padding: '15px', fontSize: '16px', fontWeight: 'bold', border: 'none', cursor: 'pointer', marginBottom: '15px' }}>
+              <button type="submit" style={{ width: '100%', background: '#fff', color: '#000', padding: '15px', fontSize: '16px', fontWeight: 'bold', border: 'none', cursor: 'pointer', marginBottom: '15px' }}>
                 Submit Edits
               </button>
 
-              <button onClick={logout} style={{ width: '100%', background: 'transparent', color: '#ff4444', padding: '15px', fontSize: '14px', fontWeight: 'bold', border: '1px solid #ff4444', cursor: 'pointer' }}>
+              <button type="button" onClick={logout} style={{ width: '100%', background: 'transparent', color: '#ff4444', padding: '15px', fontSize: '14px', fontWeight: 'bold', border: '1px solid #ff4444', cursor: 'pointer' }}>
                 Log Out
               </button>
-            </div>
+            </form>
           </div>
         )}
 
@@ -944,6 +995,12 @@ const [user,setUser] = useState({ name: '', email: '', studentId: '',academicRol
                 <div className="success-icon">🎫✨</div>
                 <h2>Pass Secured!</h2>
                 <p>Your digital ticket has been generated.</p>
+              </div>
+            ) : bookingStatus === 'processing_payment' ? (
+              <div className="success-state">
+                <div className="success-icon" style={{ animationDuration: '1.5s' }}>💳</div>
+                <h2>Processing Payment</h2>
+                <p>Connecting to secure payment gateway...</p>
               </div>
             ) : bookingStatus === 'queued' ? (
               <div className="success-state">

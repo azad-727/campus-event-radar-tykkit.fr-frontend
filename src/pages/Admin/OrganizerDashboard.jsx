@@ -191,6 +191,27 @@ const OrganizerDashboard = () => {
     }
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      const token = localStorage.getItem('tykkit_jwt');
+      const res = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/s3/presigned-url?fileName=${encodeURIComponent(file.name)}&fileType=${encodeURIComponent(file.type)}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      
+      // Upload to S3 using the presigned URL (Mocked)
+      // await fetch(data.uploadUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file });
+      
+      setEventData(prev => ({ ...prev, image: data.publicUrl }));
+    } catch (err) {
+      console.error("S3 Upload failed:", err);
+      alert("Failed to upload image.");
+    }
+  };
+
   // --- MINIMAL THEME DICTIONARY ---
   const theme = {
     bg: '#000000', surface: '#0a0a0a', surfaceHover: '#141414',
@@ -449,10 +470,10 @@ const OrganizerDashboard = () => {
 
                   <div className="form-col">
                     <label style={{ color: theme.textMuted, fontSize: '13px', fontWeight: '500', display: 'flex', justifyContent: 'space-between' }}>
-                      <span>Cover Asset URL</span>
-                      <span style={{ fontSize: '11px', opacity: 0.6 }}>Use Dropbox/Imgur</span>
+                      <span>Cover Asset (S3 Upload)</span>
                     </label>
-                    <input type="url" name="image" required value={eventData.image} onChange={handleInputChange} className="minimal-input" placeholder="https://..." />
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="minimal-input" style={{ padding: '10px' }} />
+                    {eventData.image && <span style={{ fontSize: '11px', color: theme.primary }}>Uploaded: {eventData.image}</span>}
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 0' }}>

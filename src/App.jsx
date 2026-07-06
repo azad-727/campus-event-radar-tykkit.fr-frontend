@@ -4,7 +4,14 @@ import Login from './pages/Auth/Login';
 import SignUp from './pages/Auth/SignUp'; 
 import Dashboard from './pages/Dashboard/Dashboard';
 import OrganizerDashboard from './pages/Admin/OrganizerDashboard';
+import ChangePassword from './pages/Auth/ChangePassword';
 import './index.css'; 
+
+const ProtectedRoute = ({ children }) => {
+    const token = localStorage.getItem('tykkit_jwt');
+    if (!token) return <Navigate to="/login" replace />;
+    return children;
+};
 
 function App() {
   return (
@@ -13,15 +20,8 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        {/* Route 2: The Main Application */}
-        <Route path="/" element={
-            <div style={{ color: 'white', padding: '50px', textAlign: 'center' }}>
-                <h1>tykkit.fr Dashboard</h1>
-                <p>You have successfully logged in.</p>
-                {/* <Dashboard /> */} 
-            </div>
-        } />
-        <Route path="/admin" element={<OrganizerDashboard />} />
+        <Route path="/admin" element={<ProtectedRoute><OrganizerDashboard /></ProtectedRoute>} />
+        <Route path="/change-password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
