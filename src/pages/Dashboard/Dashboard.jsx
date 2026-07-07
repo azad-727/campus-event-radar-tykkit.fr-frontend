@@ -413,9 +413,20 @@ const Dashboard = () => {
         setBookingStatus('queued'); 
       } 
       else if (response.status === 409) {
-        // SOLD OUT / EVENT_FULL (Redis DECR hit 0)
-        setBookingStatus('sold_out');
+        const errorData = await response.json();
+        if (errorData.message && errorData.message.includes("already have a pass")) {
+           setBookingStatus('idle');
+           alert(errorData.message);
+        } else {
+           // SOLD OUT / EVENT_FULL (Redis DECR hit 0)
+           setBookingStatus('sold_out');
+        }
       } 
+      else if (response.status === 410) {
+        const errorData = await response.json();
+        setBookingStatus('idle');
+        alert(errorData.message || "Event has already ended or is cancelled.");
+      }
       else if (response.status === 404) {
          // Event not found in Redis
          setBookingStatus('idle');
@@ -448,8 +459,12 @@ const Dashboard = () => {
 
       if (response.ok) {
        setMyPasses(prev => prev.filter(pass => pass.id !== regId));
+       alert("Pass cancelled successfully.");
         
         if (navigator.vibrate) navigator.vibrate(50);
+      } else if (response.status === 400) {
+        const errorData = await response.json();
+        alert(errorData.message || "Cannot cancel pass.");
       } else {
         alert("Failed to cancel the pass. Please try again.");
       }
