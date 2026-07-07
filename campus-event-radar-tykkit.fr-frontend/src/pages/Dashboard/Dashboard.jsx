@@ -120,6 +120,7 @@ const Dashboard = () => {
   const [vibes, setVibes] = useState([]);
   const [bookedTicket, setBookedTicket] = useState(null);
   const [activeTab, setActiveTab] = useState('feed'); 
+  const [vaultSubTab, setVaultSubTab] = useState('upcoming');
   const [myPasses, setMyPasses] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [mapFocusCoords, setMapFocusCoords] = useState(null);
@@ -390,7 +391,7 @@ const Dashboard = () => {
       if (selectedEvent.price !== 'FREE' && selectedEvent.price !== 0 && selectedEvent.price !== '0') {
         const payRes = await fetch(`https://campus-event-radar-tykkit-fr-backend-1.onrender.com/api/v1/payments/checkout`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
           body: JSON.stringify({ eventId: selectedEvent.id, studentId: formData.studentIdNumber, amount: selectedEvent.price })
         });
         if (!payRes.ok) throw new Error("Payment failed.");
@@ -496,6 +497,17 @@ const Dashboard = () => {
 
   const filteredEvents = dbEvents.filter(event => {
     if (event.status === 'COMPLETED' || event.status === 'CANCELLED') return false;
+    
+    // Hide ghost events that have a date in the past
+    if (event.date && event.date !== 'TBD') {
+        const eventTime = event.time && event.time !== 'TBD' ? event.time : '00:00';
+        const timeString = eventTime.length === 5 ? eventTime + ':00' : eventTime;
+        const eventDateObj = new Date(`${event.date}T${timeString}Z`);
+        if (eventDateObj.getTime() < Date.now()) {
+            return false;
+        }
+    }
+
     const matchesVenue = activeVenue === 'all' || event.venueId === activeVenue;
     const matchesSearch = 
       event.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -713,16 +725,44 @@ const Dashboard = () => {
         ========================================== */}
         {activeTab === 'vault' && (
           <div className="vault-view" style={{ padding: '0px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-            <h2 style={{ color: '#fff', fontFamily: 'monospace', borderBottom: '2px solid #3B82F6', paddingBottom: '10px' }}>
-              // MY SECURED PASSES
-            </h2>
             
-           <div className="ticket-grid" style={{ display: 'grid', gridTemplateColumns: 'auto auto auto', gap: '40px', marginTop: '40px', paddingBottom: '100px' }}>
+            <div style={{ borderBottom: '1px solid #333', display: 'flex', gap: '30px', marginBottom: '20px', paddingBottom: '0' }}>
+               <button 
+                 onClick={() => setVaultSubTab('upcoming')}
+                 style={{ background: 'transparent', color: vaultSubTab === 'upcoming' ? '#3B82F6' : '#888', border: 'none', borderBottom: vaultSubTab === 'upcoming' ? '2px solid #3B82F6' : '2px solid transparent', padding: '10px 0', fontFamily: 'monospace', fontWeight: 'bold', cursor: 'pointer', outline: 'none' }}
+               >
+                 UPCOMING PASSES
+               </button>
+               <button 
+                 onClick={() => setVaultSubTab('history')}
+                 style={{ background: 'transparent', color: vaultSubTab === 'history' ? '#3B82F6' : '#888', border: 'none', borderBottom: vaultSubTab === 'history' ? '2px solid #3B82F6' : '2px solid transparent', padding: '10px 0', fontFamily: 'monospace', fontWeight: 'bold', cursor: 'pointer', outline: 'none' }}
+               >
+                 TICKET HISTORY
+               </button>
+            </div>
+            
+           <div className="ticket-grid" style={{ display: 'grid', gridTemplateColumns: 'auto auto auto', gap: '40px', marginTop: '20px', paddingBottom: '100px' }}>
               {myPasses.length === 0 && (
-                 <div className="empty-state" style={{ color: '#888', fontFamily: 'monospace' }}>No passes secured yet. Go explore!</div>
+                 <div className="empty-state" style={{ color: '#888', fontFamily: 'monospace' }}>No passes found.</div>
               )}
 
-              {myPasses.map((pass, index) => {
+              {myPasses.filter(pass => {
+                  const linkedEvent = dbEvents.find(e => e.id === pass.eventId || e.eventId === pass.eventId);
+                  let isPast = linkedEvent?.status === 'COMPLETED' || linkedEvent?.status === 'CANCELLED';
+                  
+                  if (linkedEvent && linkedEvent.date && linkedEvent.date !== 'TBD') {
+                      const eventTime = linkedEvent.time && linkedEvent.time !== 'TBD' ? linkedEvent.time : '00:00';
+                      const timeString = eventTime.length === 5 ? eventTime + ':00' : eventTime;
+                      const eventDateObj = new Date(`${linkedEvent.date}T${timeString}Z`);
+                      if (eventDateObj.getTime() < Date.now()) isPast = true;
+                  }
+                  
+                  if (vaultSubTab === 'upcoming') {
+                      return !isPast && pass.status !== 'CANCELLED';
+                  } else {
+                      return isPast || pass.status === 'CANCELLED';
+                  }
+              }).map((pass, index) => {
                 // Find the full event details using the ID on the pass!
                 const linkedEvent = dbEvents.find(e => e.id === pass.eventId || e.eventId === pass.eventId);
 
@@ -876,7 +916,10 @@ const Dashboard = () => {
         <div className="footer-bottom">
           <div className="footer-logo"><span className="brand-logo-icon">tk</span></div>
           <div className="footer-legal">
-            <span>About Tykkit</span><span>Products</span><span>Privacy</span><span>Terms</span>
+            <span onClick={() => navigate('/about')} style={{cursor: 'pointer'}}>About Tykkit</span>
+            <span onClick={() => navigate('/products')} style={{cursor: 'pointer'}}>Products</span>
+            <span onClick={() => navigate('/privacy')} style={{cursor: 'pointer'}}>Privacy</span>
+            <span onClick={() => navigate('/terms')} style={{cursor: 'pointer'}}>Terms</span>
           </div>
         </div>
       </footer>
