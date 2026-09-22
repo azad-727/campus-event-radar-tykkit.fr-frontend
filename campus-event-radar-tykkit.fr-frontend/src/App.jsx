@@ -14,6 +14,14 @@ const ProtectedRoute = ({ children }) => {
     return children;
 };
 
+const AdminRoute = ({ children }) => {
+    const token = localStorage.getItem('tykkit_jwt');
+    const role = localStorage.getItem('tykkit_role');
+    if (!token) return <Navigate to="/login" replace />;
+    if (role !== 'ROLE_ADMIN') return <Navigate to="/" replace />; // Kick students back to dashboard
+    return children;
+};
+
 const aboutContent = [
   "Tykkit is the ultimate campus event platform, designed exclusively for modern students.",
   "We believe that experiencing a campus event should be seamless, social, and entirely digital.",
@@ -46,7 +54,7 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/admin" element={<ProtectedRoute><OrganizerDashboard /></ProtectedRoute>} />
+        <Route path="/admin" element={<AdminRoute><OrganizerDashboard /></AdminRoute>} />
         <Route path="/change-password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
         <Route path="/about" element={<StaticPage title="About Tykkit" content={aboutContent} />} />
         <Route path="/privacy" element={<StaticPage title="Privacy Policy" content={privacyContent} />} />

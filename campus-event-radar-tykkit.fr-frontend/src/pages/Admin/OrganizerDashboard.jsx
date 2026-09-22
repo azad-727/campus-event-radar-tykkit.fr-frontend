@@ -112,7 +112,7 @@ const OrganizerDashboard = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('tykkit_jwt');
+    localStorage.clear();
     navigate('/login');
   };
 
@@ -148,6 +148,14 @@ const OrganizerDashboard = () => {
 
   const handlePublishEvent = async (e) => {
     e.preventDefault();
+    
+    // Prevent creating events in the past
+    const eventDateTime = new Date(`${eventData.date}T${eventData.time}`);
+    if (eventDateTime < new Date()) {
+        alert("Cannot create events in the past!");
+        return;
+    }
+
     setIsSubmitting(true);
     setSuccessMsg('');
 

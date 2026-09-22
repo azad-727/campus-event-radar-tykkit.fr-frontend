@@ -21,15 +21,22 @@ const Login = () => {
         password:data.password
       });
       
-      const { token,fullName,email, studentId}=response.data;
+      const { token,fullName,email, studentId, instituteId, role}=response.data;
       
       localStorage.setItem('tykkit_jwt',token);
       localStorage.setItem('tykkit_user',fullName);
       localStorage.setItem('tykkit_email', email);
       localStorage.setItem('tykkit_studentId', studentId);
+      localStorage.setItem('tykkit_instituteId', instituteId);
+      localStorage.setItem('tykkit_role', role);
 
       console.log("Welcome to tykkit,",fullName);
-      navigate('/');
+      // Redirect admins to dashboard, students to main app
+      if (role === 'ROLE_ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
 
     }catch(error){
       console.error("Login failed:",error.response?.data || "Server error");

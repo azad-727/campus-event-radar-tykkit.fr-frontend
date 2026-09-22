@@ -429,9 +429,14 @@ const Dashboard = () => {
         alert(errorData.message || "Event has already ended or is cancelled.");
       }
       else if (response.status === 404) {
-         // Event not found in Redis
          setBookingStatus('idle');
          alert("Error: This event hasn't been initialized in the system yet.");
+      }
+      else if (response.status === 401 || response.status === 403) {
+         setBookingStatus('idle');
+         alert("Your session has expired or you are unauthorized. Please log in again.");
+         localStorage.clear();
+         navigate('/login');
       }
       else {
         const responseText = await response.text();
